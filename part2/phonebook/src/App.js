@@ -34,15 +34,23 @@ const App = () => {
 
   const handlePersonDelete = (id) => {
     const personToDelete = persons.find(person => person.id === id)
-    if(window.confirm("Delete " + personToDelete.name))
+    if(window.confirm("Delete " + personToDelete.name)){
+
     phonebookServices.deletePerson(id)
     .then(deleted => {
       setPersons(persons.filter(person => person.id !== id))
-    })
-    setNotificationMessage(`${personToDelete.name} was deleted`)
+      setNotificationMessage(`${personToDelete.name} was deleted`)
     setTimeout(() => {
       setNotificationMessage(null)
     }, 5000)
+    }).catch(error => {
+      console.log(error.response.data)
+      setNotificationMessage(error.response.data.error)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    })
+  }
   }
 
   const handleSubmit = (event) => {
@@ -52,15 +60,26 @@ const App = () => {
     if(personToUpdate !== undefined) {
       if(window.confirm(personToUpdate.name + " is already in the list, do you want to replace the old number with the new one?")){
         const changedPerson = {...personToUpdate, number: newNumber}
+
         phonebookServices.updatePerson(personToUpdate.id, changedPerson)
-        .then(updated => setPersons(persons.map(person => person.id !== updated.id ? person : updated)))
-        setNotificationMessage(`${changedPerson.name} number was updated`)
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 5000)
+        .then(updated => {
+          setPersons(persons.map(person => person.id !== updated.id ? person : updated))
+          setNotificationMessage(`${changedPerson.name} number was updated`)
+            setTimeout(() => {
+              setNotificationMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          console.log(error.response.data)
+          setNotificationMessage(error.response.data.error)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+        })
       }
       return
     }
+
     const newPerson = {
       name: newName,
       number: newNumber
@@ -71,11 +90,18 @@ const App = () => {
       setPersons(persons.concat(addedPerson))
       setNewName('')
       setNewNumber('')
+      setNotificationMessage(`Added ${newPerson.name}`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    }).catch(error => {
+      console.log(error.response.data)
+      setNotificationMessage(error.response.data.error)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
     })
-    setNotificationMessage(`Added ${newPerson.name}`)
-    setTimeout(() => {
-      setNotificationMessage(null)
-    }, 5000)
+    
     console.log(persons)
   }
 
