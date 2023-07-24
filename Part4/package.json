@@ -1,0 +1,28 @@
+{
+    "name": "part4",
+    "version": "1.0.0",
+    "description": "part4 from fullstackopen course",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "jest --verbose"
+    },
+    "author": "Elies Aybar",
+    "license": "ISC",
+    "devDependencies": {
+        "jest": "^29.6.1",
+        "nodemon": "^3.0.1"
+    },
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "dotenv": "^16.3.1",
+        "jsonwebtoken": "^9.0.1",
+        "mongoose-unique-validator": "^4.0.0",
+        "supertest": "^6.3.3"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "globalTeardown": "./tests/teardown.js"
+    }
+}
